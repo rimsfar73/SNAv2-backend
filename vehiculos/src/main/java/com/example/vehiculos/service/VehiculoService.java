@@ -3,37 +3,59 @@ package com.example.vehiculos.service;
 import com.example.vehiculos.exception.VehiculoNotFoundException;
 import com.example.vehiculos.model.Vehiculo;
 import com.example.vehiculos.repository.VehiculoRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class VehiculoService {
 
-    private final VehiculoRepository vehiculoRepository;
+    private final VehiculoRepository repository;
 
-    public VehiculoService(VehiculoRepository vehiculoRepository) {
-        this.vehiculoRepository = vehiculoRepository;
+    public List<Vehiculo> findAll() {
+        log.info("Listando todos los vehículos");
+        return repository.findAll();
     }
 
-    public List<Vehiculo> listarTodos() {
-        return vehiculoRepository.findAll();
+    public Vehiculo findById(Long id) {
+        log.info("Buscando vehículo {}", id);
+        return repository.findById(id)
+                .orElseThrow(() -> new VehiculoNotFoundException(id));
     }
 
-    public Vehiculo buscarPorId(Long id) {
-        return vehiculoRepository.findById(id)
-                .orElseThrow(() -> new VehiculoNotFoundException("Vehículo con id " + id + " no encontrado"));
+    public Vehiculo findByPatente(String patente) {
+        log.info("Buscando vehículo por patente {}", patente);
+        return repository.findByPatente(patente)
+                .orElseThrow(() -> new VehiculoNotFoundException(patente));
     }
 
-    public Vehiculo guardar(Vehiculo vehiculo) {
-        return vehiculoRepository.save(vehiculo);
+    public Vehiculo save(Vehiculo vehiculo) {
+        log.info("Guardando vehículo {}", vehiculo);
+        return repository.save(vehiculo);
     }
 
-    public void eliminar(Long id) {
-        if (!vehiculoRepository.existsById(id)) {
-            throw new VehiculoNotFoundException("No se puede eliminar, vehículo con id " + id + " no existe");
-        }
-        vehiculoRepository.deleteById(id);
+    public Vehiculo update(Long id, Vehiculo vehiculo) {
+        log.info("Actualizando vehículo {}", id);
+
+        Vehiculo existing = findById(id);
+
+        existing.setPatente(vehiculo.getPatente());
+        existing.setMarca(vehiculo.getMarca());
+        existing.setModelo(vehiculo.getModelo());
+        existing.setAnio(vehiculo.getAnio());
+        existing.setTipo(vehiculo.getTipo());
+
+        return repository.save(existing);
+    }
+
+    public void delete(Long id) {
+        log.warn("Eliminando vehículo {}", id);
+        repository.delete(findById(id));
     }
 }
+
 

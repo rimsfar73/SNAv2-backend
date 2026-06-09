@@ -1,31 +1,39 @@
 package com.example.viajeros.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.RepresentationModel;
 
+@Slf4j
 @Entity
-@Table(name = "viajeros")
+@Table(name = "viajero")
 @Data
-public class Viajero {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Viajero extends RepresentationModel<Viajero> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long viajeroId;
 
-    @Column(nullable = false)
+    @NotBlank
     private String nombre;
 
-    @Column(nullable = false)
+    @NotBlank
     private String apellido;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(unique = true)
+    private String rut;
+
+    @Email
     private String email;
-
-    // 🔹 Este SÍ se guarda en la BD
-    @Column(name = "vehiculo_id")
-    private Long vehiculoId;
-
-    // 🔹 Este NO se guarda en la BD (DTO externo)
-    @Transient
-    private Vehiculo vehiculo;
 }
+

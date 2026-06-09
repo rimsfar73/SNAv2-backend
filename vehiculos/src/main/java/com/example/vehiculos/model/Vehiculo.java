@@ -1,30 +1,39 @@
 package com.example.vehiculos.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.RepresentationModel;
 
+@Slf4j
 @Entity
-@Table(name = "vehiculos")
+@Table(name = "vehiculo")
 @Data
-public class Vehiculo {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Vehiculo extends RepresentationModel<Vehiculo> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long vehiculoId;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(unique = true)
     private String patente;
 
-    @Column(nullable = false)
+    @NotBlank
     private String marca;
 
-    @Column(nullable = false)
+    @NotBlank
     private String modelo;
 
-    @Column(nullable = false)
-    private int anio;
+    @Positive
+    private Integer anio;
 
-    @Column(nullable = false)
-    private String tipo; // Auto, Camioneta, Camión, Moto, etc.
+    @NotBlank
+    private String tipo;
 }
+
 

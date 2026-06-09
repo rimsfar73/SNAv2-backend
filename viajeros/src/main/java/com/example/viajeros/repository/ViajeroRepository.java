@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ViajeroRepository extends JpaRepository<Viajero, Long> {
+    Optional<Viajero> findByRut(String rut);
 }
