@@ -1,10 +1,12 @@
 package com.example.viajeros.controller;
 
+import com.example.viajeros.model.Menor;
 import com.example.viajeros.model.Viajero;
 import com.example.viajeros.service.ViajeroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +36,6 @@ public class ViajeroController {
 
     /*
      * Busca viajero por documento.
-     *
-     * Ejemplo:
-     * GET /api/v1/viajeros?documento=12345678-9
      */
     @GetMapping(params = "documento")
     public Viajero getByDocumento(@RequestParam String documento) {
@@ -114,4 +113,32 @@ public class ViajeroController {
 
         return viajero;
     }
+
+    // ============================================================
+    // ===============   ENDPOINTS DE MENORES   ====================
+    // ============================================================
+
+    @GetMapping("/{id}/menores")
+    public ResponseEntity<List<Menor>> obtenerMenores(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerMenores(id));
+    }
+
+    @PostMapping("/{id}/menores")
+    public ResponseEntity<Menor> agregarMenor(
+            @PathVariable Long id,
+            @RequestBody Menor menor) {
+
+        Menor nuevo = service.agregarMenor(id, menor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
+    }
+
+    @DeleteMapping("/{id}/menores/{index}")
+    public ResponseEntity<Void> eliminarMenor(
+            @PathVariable Long id,
+            @PathVariable int index) {
+
+        service.eliminarMenor(id, index);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -9,6 +9,9 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Entity
 @Table(name = "viajero")
@@ -119,4 +122,7 @@ public class Viajero extends RepresentationModel<Viajero> {
     @Email(message = "El email no tiene un formato válido")
     @Column(unique = true)
     private String email;
+
+    @ElementCollection
+    private List<Menor> menores = new ArrayList<>();
 }
