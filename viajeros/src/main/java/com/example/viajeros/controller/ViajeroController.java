@@ -21,48 +21,97 @@ public class ViajeroController {
 
     private final ViajeroService service;
 
+    /*
+     * Obtiene todos los viajeros registrados.
+     */
     @GetMapping
     public List<Viajero> getAll() {
+
         log.info("GET api/v1/viajeros");
+
         return service.findAll();
     }
 
-    @GetMapping(params = "rut")
-    public Viajero getByRut(@RequestParam String rut) {
-        log.info("GET api/v1/viajeros?rut={}", rut);
-        return service.findByRut(rut);
+    /*
+     * Busca viajero por documento.
+     *
+     * Ejemplo:
+     * GET /api/v1/viajeros?documento=12345678-9
+     */
+    @GetMapping(params = "documento")
+    public Viajero getByDocumento(@RequestParam String documento) {
+
+        log.info("GET api/v1/viajeros?documento={}", documento);
+
+        return service.findByDocumento(documento);
     }
 
+    /*
+     * Crea un nuevo viajero.
+     */
     @PostMapping
     public Viajero create(@Valid @RequestBody Viajero viajero) {
+
         log.info("POST api/v1/viajeros");
+
         return service.save(viajero);
     }
 
+    /*
+     * Actualiza viajero existente.
+     */
     @PutMapping("/{id}")
-    public Viajero update(@PathVariable Long id, @Valid @RequestBody Viajero viajero) {
+    public Viajero update(
+            @PathVariable Long id,
+            @Valid @RequestBody Viajero viajero
+    ) {
+
         log.info("PUT api/v1/viajeros/{}", id);
+
         return service.update(id, viajero);
     }
 
+    /*
+     * Elimina viajero por ID.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+
         log.warn("DELETE api/v1/viajeros/{}", id);
+
         service.delete(id);
+
         return ResponseEntity.noContent().build();
     }
 
-    // ÚNICO MÉTODO GET BY ID (con HATEOAS)
+    /*
+     * Obtiene viajero por ID usando HATEOAS.
+     */
     @GetMapping("/{id}")
     public Viajero getById(@PathVariable Long id) {
+
         log.info("GET api/v1/viajeros/{}", id);
 
-        Viajero v = service.findById(id);
+        Viajero viajero = service.findById(id);
 
-        v.add(linkTo(methodOn(ViajeroController.class).getById(id)).withSelfRel());
-        v.add(linkTo(methodOn(ViajeroController.class).getAll()).withRel("todos"));
-        v.add(linkTo(methodOn(ViajeroController.class).delete(id)).withRel("eliminar"));
+        viajero.add(
+                linkTo(
+                        methodOn(ViajeroController.class).getById(id)
+                ).withSelfRel()
+        );
 
-        return v;
+        viajero.add(
+                linkTo(
+                        methodOn(ViajeroController.class).getAll()
+                ).withRel("todos")
+        );
+
+        viajero.add(
+                linkTo(
+                        methodOn(ViajeroController.class).delete(id)
+                ).withRel("eliminar")
+        );
+
+        return viajero;
     }
 }

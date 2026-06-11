@@ -1,8 +1,8 @@
-CREATE TABLE viajeros (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE viajero (
+    viajero_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    vehiculo_id BIGINT NULL
+    documento VARCHAR(20) NOT NULL UNIQUE,
+    telefono VARCHAR(15) NOT NULL,
+    direccion VARCHAR(200) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
 );
-
